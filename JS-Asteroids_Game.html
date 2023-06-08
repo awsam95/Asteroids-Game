@@ -156,6 +156,8 @@
         }
 
         function newLevel() {
+            text = "Level " + (level + 1);
+            textAlpha = 1.0;
             createAsteroidsBelt();
         }
 
@@ -367,6 +369,16 @@
                     ctx.arc(ship.lasers[i].x, ship.lasers[i].y, ship.r * 0.25, 0, Math.PI * 2, false);
                     ctx.fill();
                 }
+            }
+
+            // draw the game text
+            if(textAlpha >= 0){
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "rgba(255, 255, 255, " + textAlpha + ")";
+                ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
+                ctx.fillText(text, canv.width / 2, canv.height * 0.75);
+                textAlpha -= (1.0 / TEXT_FADE_TIME / FPS);
             }
 
             // detect laser hits on astroids
