@@ -49,6 +49,7 @@
 
         //set up the music
         let music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a");
+        let roidsLeft, roidsTotal;
 
         //set up the game parameters
         let level, lives, roids, score, scoreHigh, ship, text, textAlpha;
@@ -98,6 +99,8 @@
 
         function createAsteroidsBelt () {
             roids = [];
+            roidsTotal = (ROIDS_NUM + level) * 7;
+            roidsLeft = roidsTotal;
             let x, y;
             for (let i = 0; i < ROIDS_NUM + level; i++){
                 do {
@@ -135,6 +138,11 @@
             // destroy the asteroid
             roids.splice(index, 1);
             fxHit.play();
+
+
+            // calculate the ratio of romaining asteroids to determine music tempo
+            roidsLeft--;
+            music.setAsteroidRatio(roidsLeft == 0 ? 1 : roidsLeft / roidsTotal);
 
             // New level when no more astroids
             if(roids.length == 0) {
@@ -292,6 +300,10 @@
                     }
                     this.low = !this.low
                 }
+            }
+
+            this.setAsteroidRatio = function(ratio){
+                this.tempo = 1.0 - 0.75 * (1.0 - ratio);
             }
 
             this.tick = function() {
